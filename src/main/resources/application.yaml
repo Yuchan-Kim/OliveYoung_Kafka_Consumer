@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: Kafka_Consumer_OliveYoung
+  kafka:
+    bootstrap-servers: ""
+    topic: "message_topic"
+    consumer:
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      group-id: PV-OLIVEYOUNG-TEST
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      ack-mode: manual_immediate
+      concurrency: 4
+
+oliveyoung:
+  restApi:
+    url: "https://target:port"
+
+
+
+
+
+
