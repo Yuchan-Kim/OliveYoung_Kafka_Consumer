@@ -1,11 +1,14 @@
 package com.powervoice_oliveyoung.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Builder;
-import lombok.Data;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
-@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MessageDto {
     private boolean endpoint;
@@ -14,8 +17,9 @@ public class MessageDto {
     private String text;
     private CallInfo callInfo;
 
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Data
-    @Builder
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CallInfo {
         private String callID;
