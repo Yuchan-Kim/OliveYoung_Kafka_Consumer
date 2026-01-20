@@ -3,20 +3,32 @@ spring:
     name: Kafka_Consumer_OliveYoung
   kafka:
     bootstrap-servers: ""
-    topic: "message_topic"
+    partitions: 32
+    topic: "message_topic" 
     consumer:
-      auto-offset-reset: earliest
-      enable-auto-commit: false
-      group-id: PV-OLIVEYOUNG-TEST
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest #처음부터 읽기 (groupid에 커밋이 없을때)
+      enable-auto-commit: false #자동 커밋 비활성화
+      group-id: PV-OLIVEYOUNG-TEST
+      max-poll-records: 100 #한번에 poll하는 레코드 수
+      properties:
+        max.poll.interval.ms: 900000 # 최대 폴링 간격 15분
     listener:
-      ack-mode: manual_immediate
-      concurrency: 4
+      ack-mode: manual_immediate #수동 ack 모드 설정
+      async-acks: true #worker thread 별로 비동기 ack 처리
+      concurrency: 4 #listener concurrency 설정
+
 
 oliveyoung:
   restApi:
     url: "https://target:port"
+
+message:
+  queue:
+    size: 32000 #각 파티션별 할당 되는 큐의 크기
+
+
 
 
 
