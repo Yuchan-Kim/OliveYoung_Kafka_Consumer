@@ -21,7 +21,7 @@ import jakarta.annotation.PostConstruct;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PartitionWorkerThreads {
+public class PartitionWorkerManager {
 
     private final PartitionQueue partitionQueue;
     private final RestApiClient restApiClient;

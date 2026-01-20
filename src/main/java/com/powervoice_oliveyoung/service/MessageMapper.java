@@ -1,8 +1,11 @@
 package com.powervoice_oliveyoung.service;
 
+import org.springframework.stereotype.Service;
+
 import com.powervoice_oliveyoung.dto.MessageDto;
 import com.powervoice_oliveyoung.dto.RequestDto;
 
+@Service
 public class MessageMapper {
 
     public RequestDto toRequestDto(MessageDto messageDto) {
