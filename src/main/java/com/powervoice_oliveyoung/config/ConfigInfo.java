@@ -16,4 +16,10 @@ public class ConfigInfo {
 
     @Value("${message.queue.size}")
     private int messageQueueSize;
+
+    @Value("${message.flow.control.high}")
+    private int flowControlHigh;
+
+    @Value("${message.flow.control.low}")
+    private int flowControlLow;
 }

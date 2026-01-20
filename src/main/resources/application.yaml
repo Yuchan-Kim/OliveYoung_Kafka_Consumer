@@ -26,8 +26,11 @@ oliveyoung:
 
 message:
   queue:
-    size: 32000 #각 파티션별 할당 되는 큐의 크기
-
+    size: 1000 #각 파티션별 할당 되는 큐의 크기
+  flow:
+    control:
+      high: 28800
+      low: 16000
 
 
 
