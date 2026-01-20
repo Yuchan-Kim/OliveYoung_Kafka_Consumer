@@ -11,7 +11,7 @@ import java.util.List;
 
 
 import com.powervoice_oliveyoung.config.ConfigInfo;
-import com.powervoice_oliveyoung.dto.KafkaWorker;
+import com.powervoice_oliveyoung.dto.KafkaWorkerDto;
 
 
 @Component
@@ -19,7 +19,7 @@ import com.powervoice_oliveyoung.dto.KafkaWorker;
 public class PartitionQueue {
 
     private final ConfigInfo configInfo;
-    private List<BlockingQueue<KafkaWorker>> queues;
+    private List<BlockingQueue<KafkaWorkerDto>> queues;
 
     private int partitionCount;
 
@@ -41,28 +41,37 @@ public class PartitionQueue {
     }
 
     //특정 파티션의 큐에 작업 추가 (타임아웃 포함)
-    public boolean offer(int partition, KafkaWorker task, long timeoutMs) throws InterruptedException {
+    public boolean offer(int partition, KafkaWorkerDto task, long timeoutMs) throws InterruptedException {
         return queues.get(partition).offer(task, timeoutMs, TimeUnit.MILLISECONDS);
     }
 
     //특정 파티션의 큐에 작업 추가
-    public void put(int partition, KafkaWorker task) throws InterruptedException {
+    public void put(int partition, KafkaWorkerDto task) throws InterruptedException {
         queues.get(partition).put(task);
     }
 
     //특정 파티션의 큐에서 작업 가져오기
-    public KafkaWorker take(int partition) throws InterruptedException {
+    public KafkaWorkerDto take(int partition) throws InterruptedException {
         return queues.get(partition).take();
     }
 
     //모든 파티션의 큐가 비어있는지 확인
     public boolean isEmptyAll() {
-        for (BlockingQueue<KafkaWorker> queue : queues) {
+        for (BlockingQueue<KafkaWorkerDto> queue : queues) {
             if (!queue.isEmpty()) {
                 return false;
             }
         }
         return true;
+    }
+
+    //모든 파티션의 큐 크기 합산 반환
+    public int totalsize() {
+        int sum = 0;
+        for (BlockingQueue<KafkaWorkerDto> queue : queues) {
+            sum += queue.size();
+        }
+        return sum;
     }
 
 
