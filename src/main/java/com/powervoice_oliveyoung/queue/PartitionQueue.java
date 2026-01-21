@@ -65,6 +65,11 @@ public class PartitionQueue {
         return true;
     }
 
+    //특정 파티션의 큐 크기 반환
+    public int size(int partition) {
+        return queues.get(partition).size();
+    }
+
     //모든 파티션의 큐 크기 합산 반환
     public int totalsize() {
         int sum = 0;
@@ -73,6 +78,22 @@ public class PartitionQueue {
         }
         return sum;
     }
+
+    //특정 파티션의 큐 용량 반환
+    public int capacity(int partition) {
+        // LinkedBlockingQueue는 remainingCapacity() 제공
+        return queues.get(partition).size() + queues.get(partition).remainingCapacity();
+    }
+
+    //모든 파티션의 큐 종료 프로세스 시작
+    public void addPoisonToAll() throws InterruptedException {
+        for (int i = 0; i < partitionCount; i++){
+            queues.get(i).put(KafkaWorkerDto.poison(i));
+        }
+    }
+
+
+
 
 
 

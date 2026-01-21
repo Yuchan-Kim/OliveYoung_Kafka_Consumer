@@ -2,8 +2,6 @@ package com.powervoice_oliveyoung.kafka;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.springframework.kafka.config.KafkaListenerEndpoint;
-import org.springframework.kafka.config.KafkaListenerEndpointRegistrar;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.stereotype.Component;
@@ -57,9 +55,27 @@ public class FlowControlManager {
                     n++;
                 }
             }catch (Exception e) {
-        log.warn("[FlowControlManager] RESUMED all containers. count={}, reason={}", n, reason);
+                log.error("[FlowControlManager] Error resuming listener container: {}", c.getListenerId(), e);
             }
         }
+        log.warn("[FlowControlManager] RESUMED all containers. count={}, reason={}", n, reason);
+
+    }
+
+    public void stopAll(String reason) {
+        paused.set(false);
+        int n = 0;
+        for (MessageListenerContainer c : registry.getListenerContainers()){
+            try{
+                if(c.isRunning()) {
+                    c.stop();
+                    n++;
+                }
+            }catch (Exception e) {
+                log.error("[FlowControlManager] Error stopping listener container: {}", c.getListenerId(), e);
+            }
+        }
+        log.warn("[FlowControlManager] STOPPED all containers. count={}, reason={}", n, reason);
     }
     
 }
