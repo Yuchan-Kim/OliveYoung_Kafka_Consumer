@@ -1,0 +1,53 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.0.1'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.powervoice'
+version = '0.0.1-SNAPSHOT'
+description = 'Call REST API from Olive Young to send Kafka message from E2E engine'
+
+java {
+	toolchain {
+        // 런타임/빌드 환경이 달라도 컴파일 JDK 버전을 17로 고정 (서버 표준화)
+        languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+        // Lombok은 컴파일 시점에만 필요하고 런타임에는 불필요하므로 compileOnly로 둠
+        // annotationProcessor와 함께 써야 Lombok이 정상 동작함
+        extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+    // 표준 Maven 저장소
+    mavenCentral()
+}
+
+dependencies {
+    // Kafka
+	implementation 'org.springframework.boot:spring-boot-starter-kafka'
+
+    // REST 전송을 WebClient로 처리하기 위한 WebFlux 스타터
+    // (비동기/리액티브 기반이지만 block()으로 동기처럼 써도 됨)
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Utility
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-kafka-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webflux-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    // JUnit5 플랫폼 사용
+    useJUnitPlatform()
+}

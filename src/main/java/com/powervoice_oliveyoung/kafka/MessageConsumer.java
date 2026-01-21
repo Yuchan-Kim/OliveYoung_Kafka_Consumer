@@ -18,26 +18,38 @@ public class MessageConsumer {
     private final PartitionQueue partitionQueue;
     private final FlowControlManager flow;
     private final ConfigInfo configInfo;
+    private final ShutdownFlag shutdownFlag;
+
 
 
     @KafkaListener(topics = "${spring.kafka.topic}", groupId = "${spring.kafka.consumer.group-id}")
     public void listen(ConsumerRecord<String,String> record, Acknowledgment ack){
+
+        if (shutdownFlag.isRejecting()) {
+            log.warn("[KafkaListener] Shutdown in progress. Rejecting new messages.");
+            return; //ack 하지 않고 반환
+        }
+
         int partitionNumber = record.partition();
-        long offset = record.offset();
+        
         KafkaWorkerDto worker = KafkaWorkerDto.of(partitionNumber, record.offset(), record.value(), ack);
         
         try{
-            boolean ok = partitionQueue.offer(partitionNumber, worker,50);
+            boolean ok = partitionQueue.offer(partitionNumber, worker, 50);
 
-            if(!ok){
+            if (!ok) {
                 int total = partitionQueue.totalsize();
-                log.warn("[KafkaListener] Partition {} queue full. Current total queue size: {}", partitionNumber, partitionQueue.totalsize());
+                log.warn("[KafkaListener] queue full. partition={}, total={}", partitionNumber, total);
 
-                if(total >= configInfo.getFlowControlHigh()){
-                    flow.pauseAll("Queue-full total = " + total);
-                }
-                return; //ack 하지 않고 반환
+                flow.pauseAll("queue-full total=" + total);
+                return; // ack 안 함
             }
+
+            int total = partitionQueue.totalsize();
+            if (total >= configInfo.getFlowControlHigh()) {
+                flow.pauseAll("high-watermark total=" + total);
+            }
+            
         }catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
             return; // ack 안 함
