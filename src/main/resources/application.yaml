@@ -1,8 +1,10 @@
+server:
+  port: 0906
 spring:
   application:
     name: Kafka_Consumer_OliveYoung
   kafka:
-    bootstrap-servers: ""
+    bootstrap-servers: "192.168.0.64:9092"
     partitions: 32
     topic: "message_topic" 
     consumer:
@@ -10,7 +12,7 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       auto-offset-reset: earliest #처음부터 읽기 (groupid에 커밋이 없을때)
       enable-auto-commit: false #자동 커밋 비활성화
-      group-id: PV-OLIVEYOUNG-TEST
+      group-id: PV-OLIVEYOUNG-TEST01
       max-poll-records: 100 #한번에 poll하는 레코드 수
       properties:
         max.poll.interval.ms: 900000 # 최대 폴링 간격 15분
@@ -22,15 +24,15 @@ spring:
 
 oliveyoung:
   restApi:
-    url: "https://target:port"
+    url: "http://localhost:0906/test/receive"
 
 message:
   queue:
     size: 1000 #각 파티션별 할당 되는 큐의 크기
   flow:
     control:
-      high: 28800
-      low: 16000
+      high: 20
+      low: 10
 
 
 

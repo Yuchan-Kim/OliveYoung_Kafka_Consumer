@@ -7,15 +7,15 @@ import lombok.Data;
 @Builder
 public class RequestDto {
 
-    private String callId;
+    private String CALLID;
 
-    private boolean endpoint;
+    private boolean ENDPOINT;
 
-    private String event;
+    private String EVENT;
 
-    private int seq;
+    private int SEQ;
 
-    private String result;
+    private String RESULT;
 
-    private String txrx;
+    private String TXRX;
 }

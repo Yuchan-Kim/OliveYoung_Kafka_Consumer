@@ -10,11 +10,11 @@ public class MessageMapper {
 
     public RequestDto toRequestDto(MessageDto messageDto) {
         return RequestDto.builder()
-                .callId(messageDto.getCallInfo().getCallID())
-                .event(messageDto.getEvent())
-                .seq(messageDto.getSequenceID())
-                .result(messageDto.getText())
-                .txrx(messageDto.getCallInfo().getChannel())
+                .CALLID(messageDto.getCallInfo().getCallID())
+                .EVENT(messageDto.getEvent())
+                .SEQ(messageDto.getSequenceID())
+                .RESULT(messageDto.getText())
+                .TXRX(messageDto.getCallInfo().getChannel())
                 .build();
     }
 }
