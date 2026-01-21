@@ -11,4 +11,15 @@ public class ConfigInfo {
     @Value("${oliveyoung.restApi.url}")
     private String oliveRestApiUrl;
 
+    @Value("${spring.kafka.partitions}")
+    private int partitions;
+
+    @Value("${message.queue.size}")
+    private int messageQueueSize;
+
+    @Value("${message.flow.control.high}")
+    private int flowControlHigh;
+
+    @Value("${message.flow.control.low}")
+    private int flowControlLow;
 }
